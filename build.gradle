@@ -28,7 +28,7 @@ tasks.withType(KotlinCompile) {
 }
 
 shadowJar {
-  archiveBaseName.set('pdf-signer.jar')
+  archiveBaseName.set('pdf-signer')
   archiveVersion.set('0.1')
   manifest {
     attributes 'Main-Class': 'de.gs.pdf.MainKt'
