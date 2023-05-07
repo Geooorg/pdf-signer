@@ -10,6 +10,21 @@ That new page contains a UUID, the date and author. Furthermore a kind of 'secre
 ## Running the application
 
 After building it, run
+
+```
+Usage: main [OPTIONS] CODE AUTHOR [FILES]...
+
+Options:
+  -h, --help  Show this message and exit
+
+Arguments:
+  CODE    Text to add as code
+  AUTHOR  Your name
+  FILES   list of files to sign
+
+```
+
+For example
 `java -jar build/libs/pdf-signer.jar "your secret" "Your name" /home/you/input1.pdf <other files>`
 
 The 'signed' files will be written to `/home/you/input1_signed.pdf`.
