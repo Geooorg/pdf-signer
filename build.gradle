@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
 	id 'org.graalvm.buildtools.native' version '0.9.20'
 	id 'org.jetbrains.kotlin.jvm' version '1.7.22'
-	id 'org.jetbrains.kotlin.plugin.spring' version '1.7.22'
+	id 'com.github.johnrengelman.shadow' version '8.1.1'
 }
 
 group = 'de.gs'
@@ -17,9 +17,7 @@ repositories {
 dependencies {
 	implementation("com.github.ajalt.clikt:clikt:3.5.2")
 	implementation group: 'org.apache.pdfbox', name: 'pdfbox', version: '2.0.28'
-	implementation group: 'com.itextpdf', name: 'itextpdf', version: '5.5.13.3'
 	implementation 'org.jetbrains.kotlin:kotlin-reflect'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 tasks.withType(KotlinCompile) {
@@ -27,6 +25,15 @@ tasks.withType(KotlinCompile) {
 		freeCompilerArgs = ['-Xjsr305=strict']
 		jvmTarget = '17'
 	}
+}
+
+shadowJar {
+  archiveBaseName.set('pdf-signer.jar')
+  archiveVersion.set('0.1')
+  manifest {
+    attributes 'Main-Class': 'de.gs.pdf.MainKt'
+  }
+  configurations = [project.configurations.compileClasspath]
 }
 
 tasks.named('test') {
