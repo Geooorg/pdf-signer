@@ -1,0 +1,3 @@
+* Keypair was generated using Apple's "Schlüsselbundverwaltung"
+* Using KeyStore Explorer (https://keystore-explorer.org), the pair was exported as PEM
+* Then private and public key were manually "split" and put to the files id_rsa / id_rsa.pub
