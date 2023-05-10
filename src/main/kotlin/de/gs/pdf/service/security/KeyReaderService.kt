@@ -8,7 +8,7 @@ import java.security.cert.CertificateFactory
 import java.security.spec.PKCS8EncodedKeySpec
 
 
-class CertService(
+class KeyReaderService(
     val keyFactory: KeyFactory,
     val keyFileDirectory: String
 ) {

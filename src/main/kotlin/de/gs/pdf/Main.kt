@@ -5,7 +5,7 @@ import com.github.ajalt.clikt.parameters.arguments.argument
 import com.github.ajalt.clikt.parameters.arguments.help
 import com.github.ajalt.clikt.parameters.arguments.multiple
 import com.github.ajalt.clikt.parameters.types.file
-import de.gs.pdf.service.security.CertService
+import de.gs.pdf.service.security.KeyReaderService
 import de.gs.pdf.service.PdfFileWriter
 import org.bouncycastle.jce.provider.BouncyCastleProvider
 import java.security.KeyFactory
@@ -28,8 +28,8 @@ class Main : CliktCommand() {
         val uuid = UUID.randomUUID()
         println("Generated UUID is: $uuid")
 
-        val certService = CertService(KeyFactory.getInstance("RSA", "BC"), keyDir)
-        certService.createKeyPair()
+        val keyReaderService = KeyReaderService(KeyFactory.getInstance("RSA", "BC"), keyDir)
+        keyReaderService.createKeyPair()
 
         val fileList = files.filter { f -> f.name.endsWith(".pdf", true) }
         val pdfReader = PdfFileWriter(fileList, code, author, uuid)
