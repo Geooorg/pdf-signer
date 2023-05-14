@@ -7,8 +7,8 @@ import com.github.ajalt.clikt.parameters.arguments.multiple
 import com.github.ajalt.clikt.parameters.types.file
 import de.gs.pdf.service.security.KeyReaderService
 import de.gs.pdf.service.PdfFileWriter
+import de.gs.pdf.service.security.SignatureService
 import org.bouncycastle.jce.provider.BouncyCastleProvider
-import java.security.KeyFactory
 import java.security.Security
 import java.util.*
 import kotlin.system.exitProcess
@@ -18,24 +18,26 @@ class Main : CliktCommand() {
 
     //    val files: String by option(help = "file list to sign").prompt("files")
 //    private val files: List<String> by argument().multiple()
-    private val code by argument().help("Text to add as code ")
+    private val code by argument().help("Text to add as code")
     private val author by argument().help("Your name")
-    private val keyDir by argument(help = "path to your private/public key directory")
+    private val keyStore by argument().file(mustExist = true).help("path to your keyStore.p12 file")
+    private val password by argument(help = "your keyStore.p12 password. If empty, type \"\"")
     private val files by argument().file(mustExist = true).multiple().help("list of files to sign")
 
     override fun run() {
 
         val uuid = UUID.randomUUID()
         println("Generated UUID is: $uuid")
+        // KeyFactory.getInstance("RSA", "BC"),
 
-        val keyReaderService = KeyReaderService(KeyFactory.getInstance("RSA", "BC"), keyDir)
-        keyReaderService.createKeyPair()
+        val keyReaderService = KeyReaderService( keyStore, password)
+        val keyPair = keyReaderService.createKeyPair()
+        val signatureService = SignatureService(keyPair)
 
         val fileList = files.filter { f -> f.name.endsWith(".pdf", true) }
-        val pdfReader = PdfFileWriter(fileList, code, author, uuid)
-        pdfReader.addTextSignature()
+        val pdfReader = PdfFileWriter(fileList, code, author, uuid, signatureService)
 
-        // val signService = SignService()
+        pdfReader.addTextAndDigitalSignature()
     }
 
 }

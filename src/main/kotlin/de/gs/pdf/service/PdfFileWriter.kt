@@ -1,5 +1,6 @@
 package de.gs.pdf.service
 
+import de.gs.pdf.service.security.SignatureService
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.pdmodel.PDPage
 import org.apache.pdfbox.pdmodel.PDPageContentStream
@@ -12,8 +13,10 @@ import java.time.format.DateTimeFormatter
 import java.util.UUID
 
 
-class PdfFileWriter(val fileNames: List<File>, val code: String, val author: String, val uuid: UUID) {
-    fun addTextSignature() {
+class PdfFileWriter(
+    val fileNames: List<File>, val code: String, val author: String, val uuid: UUID,
+    val signatureService: SignatureService) {
+    fun addTextAndDigitalSignature() {
         fileNames.forEach { file ->
 
             val outFile = destinationFileName(file)
@@ -40,7 +43,11 @@ class PdfFileWriter(val fileNames: List<File>, val code: String, val author: Str
                         contentStream.endText()
                     }
 
-                    document.save(outFile.absolutePath)
+                    val signedDocument = signatureService.signDocument(document)
+
+                    signedDocument.save(outFile.absolutePath)
+                    signedDocument.close()
+
                     println("${outFile.name} written successfully.")
                 }
             } catch (e: IOException) {
